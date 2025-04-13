@@ -9,7 +9,7 @@ targets:
     platform: iOS
     sources: .  # This points to the root directory where your source code resides
     info:
-      path: Info.plist  # Adjust if your Info.plist is in a different location
+      path: Info.plist  # Path to your Info.plist file
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.clearapp.clear
@@ -17,10 +17,10 @@ targets:
         CODE_SIGN_IDENTITY: ""  # Empty for unsigned build
         CODE_SIGNING_REQUIRED: NO
         CODE_SIGNING_ALLOWED: NO
-schemes:
-  Clear:
-    build:
-      targets:
-        Clear: all
-    run:
-      config: Release
+    schemes:
+      Clear:
+        build:
+          targets:
+            Clear: all
+        run:
+          config: Release
