@@ -1,0 +1,24 @@
+name: Generate Xcode Project
+
+on:
+  workflow_dispatch:  # Trigger manually from GitHub UI
+
+jobs:
+  generate-xcodeproj:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Run XcodeGen
+        run: xcodegen
+
+      - name: Upload .xcodeproj
+        uses: actions/upload-artifact@v4
+        with:
+          name: Clear-xcodeproj
+          path: Clear.xcodeproj
