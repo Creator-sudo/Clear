@@ -8,9 +8,7 @@ targets:
   Clear:
     type: application
     platform: iOS
-    sources: .  # Your Swift files are in the root
-    resources:
-      - Assets.xcassets  # Helps ensure build doesn’t fail
+    sources: .  # All your .swift files should be in root
     info:
       path: Info.plist
     settings:
@@ -27,4 +25,6 @@ schemes:
       targets:
         Clear: all
     run:
+      config: Release
+    archive:
       config: Release
