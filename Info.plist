@@ -19,7 +19,8 @@
     <!-- Enable Background Mode for PiP -->
     <key>UIBackgroundModes</key>
     <array>
-        <string>picture-in-picture</string>
+        <string>audio</string>  <!-- No PiP anymore, but audio for background recording -->
+        <string>fetch</string>
     </array>
 
     <!-- App Orientation Preferences -->
@@ -29,6 +30,10 @@
         <string>UIInterfaceOrientationLandscapeLeft</string>
         <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
+
+    <!-- Permissions for Background Tasks -->
+    <key>UIBackgroundFetchIntervalMinimum</key>
+    <integer>600</integer>
 
     <!-- Prevent screen lock while recording (Optional, if needed) -->
     <key>UIApplicationExitsOnSuspend</key>
