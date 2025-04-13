@@ -3,20 +3,24 @@ options:
   bundleIdPrefix: com.clearapp
   deploymentTarget:
     iOS: '14.0'
+
 targets:
   Clear:
     type: application
     platform: iOS
-    sources: .  # This points to the root directory where your source code resides
+    sources: .  # Your Swift files are in the root
+    resources:
+      - Assets.xcassets  # Helps ensure build doesn’t fail
     info:
-      path: Info.plist  # Adjust if your Info.plist is in a different location
+      path: Info.plist
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.clearapp.clear
         SWIFT_VERSION: 5.0
-        CODE_SIGN_IDENTITY: ""  # Empty for unsigned build
+        CODE_SIGN_IDENTITY: ""
         CODE_SIGNING_REQUIRED: NO
         CODE_SIGNING_ALLOWED: NO
+
 schemes:
   Clear:
     build:
