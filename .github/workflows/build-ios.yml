@@ -14,23 +14,27 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v4  # Updated to v4
+      uses: actions/checkout@v4  # Corrected checkout version to v4
 
     - name: Set up Xcode
-      uses: apple-actions/setup-xcode@v2
+      uses: apple-actions/setup-xcode@v2  # Correct action for setting up Xcode
       with:
-        xcode-version: '13.2'  # Use the Xcode version that suits your project
+        xcode-version: '14.0'  # Specify the version of Xcode that suits your project
+
+    - name: Install XcodeGen
+      run: |
+        brew install xcodegen  # Ensure XcodeGen is installed to generate the Xcode project
 
     - name: Generate Xcode project using XcodeGen
       run: |
-        xcodegen generate  # Generate the Xcode project using your xcodegen.yml
+        xcodegen generate  # Generates the Xcode project from the xcodegen.yml file
 
     - name: Build iOS app
       run: |
         xcodebuild -scheme "Clear" -workspace "Clear.xcworkspace" -destination "platform=iOS" clean build
 
-    - name: Upload build artifact
-      uses: actions/upload-artifact@v4  # Updated to v4
+    - name: Upload IPA file as artifact
+      uses: actions/upload-artifact@v4  # Upload the resulting IPA file as an artifact
       with:
         name: Clear-build-ipa
-        path: build/Release-iphoneos/Clear.ipa  # Adjust this path to where your IPA file is located
+        path: build/Release-iphoneos/Clear.ipa  # Adjust this path if necessary
