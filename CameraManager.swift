@@ -6,7 +6,6 @@ import AVKit
 class CameraManager: NSObject {
     private let session = AVCaptureSession()
     private var videoOutput: AVCaptureMovieFileOutput?
-    private var previewLayer: AVCaptureVideoPreviewLayer?
     private var outputURL: URL?
 
     private var pipController: AVPictureInPictureController?
