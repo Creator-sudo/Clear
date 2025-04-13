@@ -1,0 +1,20 @@
+workflows:
+  ios-unsigned:
+    name: iOS Unsigned Build
+    environment:
+      xcode: latest
+    scripts:
+      - name: Build .ipa without signing
+        script: |
+          xcodebuild -scheme Clear \
+                     -sdk iphoneos \
+                     -configuration Release \
+                     -archivePath $CM_BUILD_DIR/Clear.xcarchive \
+                     archive CODE_SIGNING_ALLOWED=NO
+          xcodebuild -exportArchive \
+                     -archivePath $CM_BUILD_DIR/Clear.xcarchive \
+                     -exportOptionsPlist ExportOptions.plist \
+                     -exportPath $CM_BUILD_DIR/export \
+                     CODE_SIGNING_ALLOWED=NO
+    artifacts:
+      - export/*.ipa
