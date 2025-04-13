@@ -9,7 +9,7 @@ workflows:
       - name: Build iOS app (no code signing)
         script: |
           xcodebuild \
-            -workspace Clear.xcworkspace \
+            -workspace project.xcworkspace \
             -scheme Clear \
             -configuration Release \
             -sdk iphoneos \
