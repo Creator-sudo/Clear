@@ -1,20 +1,25 @@
 workflows:
-  ios-unsigned:
-    name: iOS Unsigned Build
+  ios-unsigned-build:
+    name: Clear iOS Unsigned Build
     environment:
       xcode: latest
+      cocoapods: default
     scripts:
-      - name: Build .ipa without signing
+      - name: Install dependencies
         script: |
-          xcodebuild -scheme Clear \
+          brew install cocoapods
+          pod install
+      - name: Build unsigned .ipa
+        script: |
+          xcodebuild -workspace Clear.xcworkspace \
+                     -scheme Clear \
                      -sdk iphoneos \
                      -configuration Release \
-                     -archivePath $CM_BUILD_DIR/Clear.xcarchive \
-                     archive CODE_SIGNING_ALLOWED=NO
+                     -archivePath $HOME/Library/Developer/Xcode/Archives/Clear.xcarchive \
+                     archive
           xcodebuild -exportArchive \
-                     -archivePath $CM_BUILD_DIR/Clear.xcarchive \
+                     -archivePath $HOME/Library/Developer/Xcode/Archives/Clear.xcarchive \
                      -exportOptionsPlist ExportOptions.plist \
-                     -exportPath $CM_BUILD_DIR/export \
-                     CODE_SIGNING_ALLOWED=NO
+                     -exportPath $CM_BUILD_DIR/build
     artifacts:
-      - export/*.ipa
+      - build/*.ipa

@@ -1,17 +1,26 @@
 name: Clear
 options:
-  bundleIdPrefix: com.example
+  bundleIdPrefix: com.clearapp
   deploymentTarget:
-    iOS: 13.0
+    iOS: '14.0'
 targets:
   Clear:
     type: application
     platform: iOS
-    sources: [ . ]
-    info: Info.plist
-    dependencies: []
+    sources: .
+    info:
+      path: Info.plist
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.clearapp.clear
+        SWIFT_VERSION: 5.0
         CODE_SIGN_IDENTITY: ""
         CODE_SIGNING_REQUIRED: NO
         CODE_SIGNING_ALLOWED: NO
+schemes:
+  Clear:
+    build:
+      targets:
+        Clear: all
+    run:
+      config: Release
