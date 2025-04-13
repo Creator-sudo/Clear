@@ -7,18 +7,32 @@ workflows:
       - name: Install XcodeGen
         script: |
           brew install xcodegen
+
       - name: Generate Xcode project
         script: |
           xcodegen generate
+
       - name: Verify Xcode project generation
         script: |
           if [ ! -d "Clear.xcodeproj" ]; then
             echo "❌ Clear.xcodeproj not found. xcodegen may have failed."
             exit 1
           fi
+
       - name: Build .ipa without signing
         script: |
-          xcodebuild -scheme Clear -sdk iphoneos -configuration Release -archivePath $CM_BUILD_DIR/Clear.xcarchive archive CODE_SIGNING_ALLOWED=NO
-          xcodebuild -exportArchive -archivePath $CM_BUILD_DIR/Clear.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath $CM_BUILD_DIR/build
+          set -e # <- 💡 Recommended to catch failures immediately
+          xcodebuild -scheme Clear \
+                     -sdk iphoneos \
+                     -configuration Release \
+                     -archivePath $CM_BUILD_DIR/Clear.xcarchive \
+                     archive CODE_SIGNING_ALLOWED=NO
+
+          xcodebuild -exportArchive \
+                     -archivePath $CM_BUILD_DIR/Clear.xcarchive \
+                     -exportOptionsPlist ExportOptions.plist \
+                     -exportPath $CM_BUILD_DIR/build \
+                     CODE_SIGNING_ALLOWED=NO
+
     artifacts:
       - build/*.ipa
