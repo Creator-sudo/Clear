@@ -17,8 +17,6 @@ targets:
         CODE_SIGN_IDENTITY: ""  # Empty for unsigned build
         CODE_SIGNING_REQUIRED: NO
         CODE_SIGNING_ALLOWED: NO
-    dependencies: []
-    resources: []  # No assets folder or resources defined now
 schemes:
   Clear:
     build:
