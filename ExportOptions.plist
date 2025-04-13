@@ -3,14 +3,23 @@
 "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <!-- Method for export: 'development' since you're building for personal use -->
     <key>method</key>
-    <string>ad-hoc</string>
+    <string>development</string>
+    
+    <!-- Bitcode compilation: Not necessary for your case -->
     <key>compileBitcode</key>
     <false/>
+    
+    <!-- No signing style as you are not signing the app -->
     <key>signingStyle</key>
-    <string>manual</string>
+    <string>none</string> <!-- Explicitly state no signing required -->
+    
+    <!-- Strip unnecessary Swift symbols to reduce size -->
     <key>stripSwiftSymbols</key>
     <true/>
+    
+    <!-- Destination for export: export the IPA file -->
     <key>destination</key>
     <string>export</string>
 </dict>
