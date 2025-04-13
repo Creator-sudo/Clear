@@ -1,6 +1,6 @@
 workflows:
   ios-unsigned:
-    name: iOS Unsigned Build
+    name: IOS Unsigned Build
     environment:
       xcode: latest
     scripts:
