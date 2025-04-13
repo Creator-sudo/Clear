@@ -2,14 +2,44 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <!-- General App Information -->
+    <key>CFBundleDisplayName</key>
+    <string>Clear</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.clearapp.clear</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+
+    <!-- Camera Access Permission -->
     <key>NSCameraUsageDescription</key>
     <string>This app requires camera access to record video.</string>
+
+    <!-- Enable Background Modes for PiP and Recording -->
     <key>UIBackgroundModes</key>
     <array>
         <string>audio</string>
         <string>picture-in-picture</string>
     </array>
+
+    <!-- Video Codec for Recording (No audio, only video codec) -->
     <key>AVVideoCodecType</key>
     <string>avc1</string>
+
+    <!-- App Orientation Preferences -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+
+    <!-- Permissions for Background Tasks -->
+    <key>UIBackgroundFetchIntervalMinimum</key>
+    <integer>600</integer>
+
+    <!-- Prevent screen lock while recording (Optional, if needed) -->
+    <key>UIApplicationExitsOnSuspend</key>
+    <false/>
+    
 </dict>
 </plist>
