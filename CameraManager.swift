@@ -1,5 +1,6 @@
 import AVFoundation
 import UIKit
+import Photos
 
 class CameraManager: NSObject {
     private let session = AVCaptureSession()
@@ -54,6 +55,27 @@ extension CameraManager: AVCaptureFileOutputRecordingDelegate {
                     didFinishRecordingTo outputFileURL: URL,
                     from connections: [AVCaptureConnection],
                     error: Error?) {
-        print("Recording finished: \(outputFileURL)")
+
+        guard error == nil else {
+            print("Recording error: \(error!.localizedDescription)")
+            return
+        }
+
+        PHPhotoLibrary.requestAuthorization { status in
+            guard status == .authorized else {
+                print("Photo library access not granted.")
+                return
+            }
+
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)
+            }) { success, error in
+                if success {
+                    print("Video saved to Photos.")
+                } else if let error = error {
+                    print("Error saving video: \(error.localizedDescription)")
+                }
+            }
+        }
     }
 }
