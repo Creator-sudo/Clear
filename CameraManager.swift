@@ -1,15 +1,11 @@
 import AVFoundation
 import UIKit
 import Photos
-import AVKit
 
 class CameraManager: NSObject {
     private let session = AVCaptureSession()
     private var videoOutput: AVCaptureMovieFileOutput?
     private var outputURL: URL?
-
-    private var pipController: AVPictureInPictureController?
-    private var dummyPlayer: AVPlayer?
 
     var isRecording: Bool {
         return videoOutput?.isRecording ?? false
@@ -37,31 +33,6 @@ class CameraManager: NSObject {
 
         session.commitConfiguration()
         session.startRunning()
-
-        setupInvisiblePiP()
-    }
-
-    private func setupInvisiblePiP() {
-        guard AVPictureInPictureController.isPictureInPictureSupported() else {
-            print("PiP not supported")
-            return
-        }
-
-        // Create a 1-second black silent video to make PiP invisible
-        let bundle = Bundle.main
-        guard let path = bundle.path(forResource: "black", ofType: "mp4") else {
-            print("Missing black.mp4 for invisible PiP")
-            return
-        }
-
-        let url = URL(fileURLWithPath: path)
-        dummyPlayer = AVPlayer(url: url)
-        let playerLayer = AVPlayerLayer(player: dummyPlayer)
-        playerLayer.frame = CGRect(x: 0, y: 0, width: 1, height: 1) // Invisible layer
-
-        pipController = AVPictureInPictureController(playerLayer: playerLayer)
-        pipController?.startPictureInPicture()
-        dummyPlayer?.play()
     }
 
     func startRecording() {
@@ -75,8 +46,6 @@ class CameraManager: NSObject {
 
     func stopRecording() {
         videoOutput?.stopRecording()
-        pipController?.stopPictureInPicture()
-        dummyPlayer?.pause()
     }
 }
 
