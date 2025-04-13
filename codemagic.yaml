@@ -24,20 +24,16 @@ workflows:
             CODE_SIGN_IDENTITY="" \
             build
 
-      - name: Export .ipa (fixed path check)
+      - name: Export .ipa
         script: |
-          APP_PATH=$(find build -type d -name "Clear.app" | head -n 1)
-          if [ -z "$APP_PATH" ]; then
-            echo "❌ Clear.app not found!"
-            exit 1
-          fi
-          mkdir -p Payload
-          cp -r "$APP_PATH" Payload/
+          mkdir -p build/Release-iphoneos/Payload
+          cp -r build/Release-iphoneos/Clear.app build/Release-iphoneos/Payload/
+          cd build/Release-iphoneos
           zip -r Clear.ipa Payload
           mv Clear.ipa $CM_BUILD_DIR
 
     artifacts:
-      - Clear.ipa
+      - build/Release-iphoneos/Clear.ipa
 
     publishing:
       email:
