@@ -1,24 +1,28 @@
-name: Generate Xcode Project
+name: Generate Xcode Project with XcodeGen
 
 on:
-  workflow_dispatch:  # Trigger manually from GitHub UI
+  push:
+    branches:
+      - main
 
 jobs:
-  generate-xcodeproj:
-    runs-on: macos-latest
+  generate-xcode-project:
+    runs-on: macos-latest  # Run on a macOS runner
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Install XcodeGen
-        run: brew install xcodegen
+        run: |
+          brew install xcodegen  # Install XcodeGen on the macOS runner
 
-      - name: Run XcodeGen
-        run: xcodegen
-
-      - name: Upload .xcodeproj
-        uses: actions/upload-artifact@v4
-        with:
-          name: Clear-xcodeproj
-          path: Clear.xcodeproj
+      - name: Generate Xcode project
+        run: |
+          xcodegen generate  # Run XcodeGen to generate the .xcodeproj file
+      
+      - name: Commit generated Xcode project
+        run: |
+          git add .
+          git commit -m "Generate Xcode project"
+          git push
