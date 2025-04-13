@@ -14,28 +14,23 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4  # Updated to v4
 
     - name: Set up Xcode
       uses: apple-actions/setup-xcode@v2
       with:
-        xcode-version: '13.2' # Make sure the version matches your requirements
-
-    - name: Install Dependencies (CocoaPods or other)
-      run: |
-        gem install cocoapods
-        pod install
+        xcode-version: '13.2'  # Use the Xcode version that suits your project
 
     - name: Generate Xcode project using XcodeGen
       run: |
-        xcodegen generate
+        xcodegen generate  # Generate the Xcode project using your xcodegen.yml
 
     - name: Build iOS app
       run: |
-        xcodebuild -scheme "YourScheme" -workspace "YourWorkspace.xcworkspace" -destination "platform=iOS" clean build
+        xcodebuild -scheme "Clear" -workspace "Clear.xcworkspace" -destination "platform=iOS" clean build
 
     - name: Upload build artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4  # Updated to v4
       with:
-        name: build-ipa
-        path: path/to/your/output.ipa
+        name: Clear-build-ipa
+        path: build/Release-iphoneos/Clear.ipa  # Adjust this path to where your IPA file is located
