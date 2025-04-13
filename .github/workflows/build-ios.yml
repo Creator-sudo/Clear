@@ -1,0 +1,46 @@
+name: Generate Xcode Project and Build iOS App
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow on push to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger the workflow on pull requests to the main branch
+
+jobs:
+  build:
+    name: Generate Xcode Project and Build App
+    runs-on: macos-latest
+
+    steps:
+    # Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Install dependencies and XcodeGen
+    - name: Install XcodeGen
+      run: |
+        brew install xcodegen  # Install XcodeGen if not available
+        xcodegen  # This will generate the Xcode project from the project.yml
+
+    # Build the Xcode project (without code signing)
+    - name: Build the app (without signing)
+      run: |
+        xcodebuild -project Clear.xcodeproj -scheme Clear -configuration Release -sdk iphoneos CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO build
+
+    # Export IPA (unsigned)
+    - name: Export IPA (unsigned)
+      run: |
+        cd build/Release-iphoneos
+        mkdir Payload
+        cp -r Clear.app Payload/
+        zip -r Clear.ipa Payload
+        mv Clear.ipa $GITHUB_WORKSPACE  # Move the IPA to the root of the repository
+
+    # Upload IPA as artifact
+    - name: Upload IPA as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Clear-ipa
+        path: $GITHUB_WORKSPACE/Clear.ipa
