@@ -1,38 +1,36 @@
 workflows:
-  ios-unsigned:
-    name: IOS Unsigned Build
+  ios-unsigned-build:
+    name: iOS Unsigned Build
+    max_build_duration: 60
     environment:
+      vars:
+        FLUTTER_CHANNEL: stable
+      flutter: stable
       xcode: latest
     scripts:
-      - name: Install XcodeGen
+      - name: Set up Flutter
         script: |
-          brew install xcodegen
+          flutter --version
+          flutter pub get
 
-      - name: Generate Xcode project
+      - name: Build iOS app without codesigning
         script: |
-          xcodegen generate
+          flutter clean
+          flutter build ios --release --no-codesign
 
-      - name: Verify Xcode project generation
+      - name: Create unsigned .ipa
         script: |
-          if [ ! -d "Clear.xcodeproj" ]; then
-            echo "❌ Clear.xcodeproj not found. xcodegen may have failed."
-            exit 1
-          fi
-
-      - name: Build .ipa without signing
-        script: |
-          set -e # <- 💡 Recommended to catch failures immediately
-          xcodebuild -scheme Clear \
-                     -sdk iphoneos \
-                     -configuration Release \
-                     -archivePath $CM_BUILD_DIR/Clear.xcarchive \
-                     archive CODE_SIGNING_ALLOWED=NO
-
-          xcodebuild -exportArchive \
-                     -archivePath $CM_BUILD_DIR/Clear.xcarchive \
-                     -exportOptionsPlist ExportOptions.plist \
-                     -exportPath $CM_BUILD_DIR/build \
-                     CODE_SIGNING_ALLOWED=NO
+          cd build/ios/iphoneos
+          mkdir Payload
+          cp -r Runner.app Payload/
+          zip -r Runner.ipa Payload
+          mv Runner.ipa $CM_BUILD_DIR
+          rm -rf Payload
 
     artifacts:
-      - build/*.ipa
+      - Runner.ipa
+
+    publishing:
+      email:
+        recipients:
+          - shivamingulkar17@gmail.com  # <-- Change this if needed
