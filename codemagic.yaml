@@ -1,20 +1,14 @@
 workflows:
-  ios-unsigned-native:
-    name: iOS Unsigned Native Build
+  ios-unsigned:
+    name: iOS Unsigned IPA Build
     max_build_duration: 60
     environment:
       xcode: latest
     scripts:
-      - name: Install XcodeGen
-        script: brew install xcodegen
-
-      - name: Generate Xcode project
-        script: xcodegen
-
       - name: Build iOS app (no code signing)
         script: |
           xcodebuild \
-            -project Clear.xcodeproj \
+            -project project.xcodeproj \
             -scheme Clear \
             -sdk iphoneos \
             -configuration Release \
@@ -24,16 +18,15 @@ workflows:
             CODE_SIGN_IDENTITY="" \
             build
 
-      - name: Export .ipa
+      - name: Package .ipa
         script: |
-          mkdir -p build/Release-iphoneos/Payload
-          cp -r build/Release-iphoneos/Clear.app build/Release-iphoneos/Payload/
-          cd build/Release-iphoneos
+          mkdir -p Payload
+          cp -r build/Release-iphoneos/Clear.app Payload/
           zip -r Clear.ipa Payload
           mv Clear.ipa $CM_BUILD_DIR
 
     artifacts:
-      - build/Release-iphoneos/Clear.ipa
+      - Clear.ipa
 
     publishing:
       email:
