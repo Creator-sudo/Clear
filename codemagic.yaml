@@ -1,6 +1,6 @@
 workflows:
   ios-unsigned-native:
-    name: iOS Unsigned Native Build
+    name: IOS Unsigned Native Build
     max_build_duration: 60
     environment:
       xcode: latest
@@ -24,16 +24,25 @@ workflows:
             CODE_SIGN_IDENTITY="" \
             build
 
-      - name: Export .ipa
+      - name: Export .ipa (Fixed path)
         script: |
-          mkdir -p build/Release-iphoneos/Payload
-          cp -r build/Release-iphoneos/Clear.app build/Release-iphoneos/Payload/
-          cd build/Release-iphoneos
+          echo "🔍 Searching for .app..."
+          APP_PATH=$(find . -type d -name "Clear.app" | head -n 1)
+
+          if [ -z "$APP_PATH" ]; then
+            echo "❌ Clear.app not found!"
+            exit 1
+          fi
+
+          echo "✅ Found app at: $APP_PATH"
+
+          mkdir -p Payload
+          cp -r "$APP_PATH" Payload/
           zip -r Clear.ipa Payload
           mv Clear.ipa $CM_BUILD_DIR
 
     artifacts:
-      - build/Release-iphoneos/Clear.ipa
+      - Clear.ipa
 
     publishing:
       email:
