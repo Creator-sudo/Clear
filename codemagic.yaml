@@ -1,25 +1,24 @@
 workflows:
-  ios-unsigned-build:
-    name: Clear iOS Unsigned Build
+  ios-unsigned:
+    name: iOS Unsigned Build
     environment:
       xcode: latest
-      cocoapods: default
     scripts:
-      - name: Install dependencies
+      - name: Install XcodeGen
         script: |
-          brew install cocoapods
-          pod install
-      - name: Build unsigned .ipa
+          brew install xcodegen
+      - name: Generate Xcode project
         script: |
-          xcodebuild -workspace Clear.xcworkspace \
-                     -scheme Clear \
-                     -sdk iphoneos \
-                     -configuration Release \
-                     -archivePath $HOME/Library/Developer/Xcode/Archives/Clear.xcarchive \
-                     archive
-          xcodebuild -exportArchive \
-                     -archivePath $HOME/Library/Developer/Xcode/Archives/Clear.xcarchive \
-                     -exportOptionsPlist ExportOptions.plist \
-                     -exportPath $CM_BUILD_DIR/build
+          xcodegen generate
+      - name: Verify Xcode project generation
+        script: |
+          if [ ! -d "Clear.xcodeproj" ]; then
+            echo "❌ Clear.xcodeproj not found. xcodegen may have failed."
+            exit 1
+          fi
+      - name: Build .ipa without signing
+        script: |
+          xcodebuild -scheme Clear -sdk iphoneos -configuration Release -archivePath $CM_BUILD_DIR/Clear.xcarchive archive CODE_SIGNING_ALLOWED=NO
+          xcodebuild -exportArchive -archivePath $CM_BUILD_DIR/Clear.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath $CM_BUILD_DIR/build
     artifacts:
       - build/*.ipa
