@@ -1,49 +1,20 @@
 workflows:
-  ios-unsigned-native:
-    name: iOS Unsigned Native Build
-    max_build_duration: 60
-    environment:
-      xcode: latest  # Ensure Codemagic uses the latest version of Xcode
-    scripts:
-      - name: Install XcodeGen
-        script: |
-          # Install XcodeGen if it's not already installed
-          brew install xcodegen
-
-      - name: Generate Xcode project using XcodeGen
-        script: |
-          # Generate the Xcode project using project.yml
-          xcodegen generate
-
-      - name: Build iOS app (no code signing)
-        script: |
-          # Build the app using xcodebuild without code signing
-          xcodebuild \
-            -workspace Clear.xcworkspace \
-            -scheme Clear \
-            -configuration Release \
-            -sdk iphoneos \
-            -destination generic/platform=iOS \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
-            build
-
-      - name: Export unsigned IPA
-        script: |
-          # Prepare the directory for IPA export
-          mkdir -p build/Release-iphoneos/Payload
-          cp -r build/Release-iphoneos/Clear.app build/Release-iphoneos/Payload/
-          
-          # Zip the .app into an IPA file
-          cd build/Release-iphoneos
-          zip -r Clear.ipa Payload
-          mv Clear.ipa $CM_BUILD_DIR
-
+  ios:
+    name: Build iOS App Without Signing
+    platform: ios
+    version: stable
+    sdk: iphoneos
+    script:
+      # Any custom script (if needed) can be added here
+      - echo "Skipping signing process"
+    build:
+      ios:
+        xcode: "14.0"  # Ensure this matches the Xcode version your app needs
+        scheme: "Clear"
+        configuration: "Release"
+        archive: true
+        export_method: "development"  # Use "development" method for unsigned builds
+        export_options:
+          signingStyle: "none"  # Completely skip signing
     artifacts:
-      - build/Release-iphoneos/Clear.ipa
-
-    publishing:
-      email:
-        recipients:
-          - shivamingulkar17@gmail.com
+      - build/ios/ipa/*.ipa  # The location of the generated IPA
