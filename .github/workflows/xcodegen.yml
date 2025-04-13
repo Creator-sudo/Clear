@@ -1,4 +1,4 @@
-name: Generate Xcode Project with XcodeGen
+name: Generate and Upload Xcode Project with XcodeGen
 
 on:
   push:
@@ -7,22 +7,36 @@ on:
 
 jobs:
   generate-xcode-project:
-    runs-on: macos-latest  # Run on a macOS runner
+    runs-on: macos-latest  # macOS runner
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Step 1: Install XcodeGen
       - name: Install XcodeGen
         run: |
-          brew install xcodegen  # Install XcodeGen on the macOS runner
+          brew install xcodegen  # Install XcodeGen via Homebrew
 
+      # Step 2: Generate the Xcode project
       - name: Generate Xcode project
         run: |
-          xcodegen generate  # Run XcodeGen to generate the .xcodeproj file
-      
-      - name: Commit generated Xcode project
+          xcodegen generate  # This will generate the .xcodeproj file based on project.yml
+
+      # Step 3: Upload generated Xcode project
+      - name: Upload generated Xcode project as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: xcode-project
+          path: Clear.xcodeproj  # Upload the generated Xcode project directory
+
+      # Optionally, you can also push changes back to the repository if you want
+      - name: Push changes (if needed)
         run: |
-          git add .
-          git commit -m "Generate Xcode project"
-          git push
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add Clear.xcodeproj
+          git commit -m "Generate Xcode project using XcodeGen"
+          git push https://github.com/Creator-sudo/Clear.git HEAD:main
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Use the token stored in GitHub secrets
