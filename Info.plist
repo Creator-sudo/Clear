@@ -19,8 +19,7 @@
     <!-- Enable Background Mode for PiP -->
     <key>UIBackgroundModes</key>
     <array>
-        <string>audio</string>  <!-- No PiP anymore, but audio for background recording -->
-        <string>fetch</string>
+        <string>picture-in-picture</string>
     </array>
 
     <!-- App Orientation Preferences -->
