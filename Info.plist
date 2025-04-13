@@ -30,7 +30,11 @@
         <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
 
-    <!-- Prevent screen lock while recording -->
+    <!-- Permissions for Background Tasks -->
+    <key>UIBackgroundFetchIntervalMinimum</key>
+    <integer>600</integer>
+
+    <!-- Prevent screen lock while recording (Optional, if needed) -->
     <key>UIApplicationExitsOnSuspend</key>
     <false/>
 </dict>
