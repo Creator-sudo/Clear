@@ -1,46 +1,41 @@
-name: Generate Xcode Project and Build iOS App
+name: iOS Build
 
 on:
   push:
     branches:
-      - main  # Trigger the workflow on push to the main branch
+      - main
   pull_request:
     branches:
-      - main  # Trigger the workflow on pull requests to the main branch
+      - main
 
 jobs:
   build:
-    name: Generate Xcode Project and Build App
     runs-on: macos-latest
 
     steps:
-    # Checkout code
-    - name: Checkout code
+    - name: Checkout Code
       uses: actions/checkout@v2
 
-    # Install dependencies and XcodeGen
-    - name: Install XcodeGen
-      run: |
-        brew install xcodegen  # Install XcodeGen if not available
-        xcodegen  # This will generate the Xcode project from the project.yml
-
-    # Build the Xcode project (without code signing)
-    - name: Build the app (without signing)
-      run: |
-        xcodebuild -project Clear.xcodeproj -scheme Clear -configuration Release -sdk iphoneos CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO build
-
-    # Export IPA (unsigned)
-    - name: Export IPA (unsigned)
-      run: |
-        cd build/Release-iphoneos
-        mkdir Payload
-        cp -r Clear.app Payload/
-        zip -r Clear.ipa Payload
-        mv Clear.ipa $GITHUB_WORKSPACE  # Move the IPA to the root of the repository
-
-    # Upload IPA as artifact
-    - name: Upload IPA as artifact
-      uses: actions/upload-artifact@v2
+    - name: Set up Xcode
+      uses: apple-actions/setup-xcode@v2
       with:
-        name: Clear-ipa
-        path: $GITHUB_WORKSPACE/Clear.ipa
+        xcode-version: '13.2' # Make sure the version matches your requirements
+
+    - name: Install Dependencies (CocoaPods or other)
+      run: |
+        gem install cocoapods
+        pod install
+
+    - name: Generate Xcode project using XcodeGen
+      run: |
+        xcodegen generate
+
+    - name: Build iOS app
+      run: |
+        xcodebuild -scheme "YourScheme" -workspace "YourWorkspace.xcworkspace" -destination "platform=iOS" clean build
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-ipa
+        path: path/to/your/output.ipa
