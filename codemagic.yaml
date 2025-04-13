@@ -1,6 +1,6 @@
 workflows:
   ios-unsigned-native:
-    name: iOS Unsigned Native Build
+    name: iOS unsigned Native Build
     max_build_duration: 60
     environment:
       xcode: latest  # Make sure Codemagic is using the latest Xcode version
