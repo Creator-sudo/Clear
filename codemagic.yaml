@@ -13,7 +13,7 @@ workflows:
       - name: Generate Xcode project using XcodeGen
         script: |
           # Generate the Xcode project using project.yml
-          xcodegen generate --project-name Clear
+          xcodegen generate
 
       - name: Build iOS app (no code signing)
         script: |
