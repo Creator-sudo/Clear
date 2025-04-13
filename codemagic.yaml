@@ -1,32 +1,35 @@
 workflows:
-  ios-unsigned:
-    name: iOS Unsigned IPA Build
+  ios-unsigned-native:
+    name: iOS Unsigned Native Build
     max_build_duration: 60
     environment:
-      xcode: latest
+      xcode: latest  # Make sure Codemagic is using the latest Xcode version
     scripts:
+      # Step 1: Build iOS app without code signing
       - name: Build iOS app (no code signing)
         script: |
           xcodebuild \
-            -project project.xcodeproj \
+            -workspace Clear.xcworkspace \
             -scheme Clear \
-            -sdk iphoneos \
             -configuration Release \
+            -sdk iphoneos \
             -destination generic/platform=iOS \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
             build
 
-      - name: Package .ipa
+      # Step 2: Export unsigned IPA
+      - name: Export .ipa
         script: |
-          mkdir -p Payload
-          cp -r build/Release-iphoneos/Clear.app Payload/
+          mkdir -p build/Release-iphoneos/Payload
+          cp -r build/Release-iphoneos/Clear.app build/Release-iphoneos/Payload/
+          cd build/Release-iphoneos
           zip -r Clear.ipa Payload
           mv Clear.ipa $CM_BUILD_DIR
 
     artifacts:
-      - Clear.ipa
+      - build/Release-iphoneos/Clear.ipa
 
     publishing:
       email:
